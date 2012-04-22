@@ -2,6 +2,10 @@
 #include <avr/interrupt.h>
 #include <compat/twi.h>
 
+/*
+http://www.embedds.com/programming-avr-i2c-interface/
+http://www.ermicro.com/blog/?p=950 */
+
 #include "i2c.h"
 #include "ds1307.h"
 

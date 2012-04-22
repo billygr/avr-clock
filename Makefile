@@ -4,7 +4,7 @@ MCU_TARGET     = atmega168
 OPTIMIZE       = -O2
 
 DEFS           =
-#LIBS           = lcd.c
+LIBS           = 
 
 # You should not have to change anything below here.
 

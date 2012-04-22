@@ -4,6 +4,7 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
+#include "avrclock.h"
 #include "i2c.h"
 #include "ds1307.h"
 
