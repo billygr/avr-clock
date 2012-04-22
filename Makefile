@@ -1,5 +1,5 @@
 PRG            = avrclock
-OBJ            = avrclock.o i2c.o
+OBJ            = avrclock.o i2c.o ds1307.o
 MCU_TARGET     = atmega168
 OPTIMIZE       = -O2
 

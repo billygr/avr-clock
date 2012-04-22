@@ -5,16 +5,9 @@
 #include <util/delay.h>
 
 #include "i2c.h"
+#include "ds1307.h"
 
 extern char ds1307_addr[7];
-// DS1307 Register Address
-// Second: ds1307_addr[0]
-// Minute: ds1307_addr[1]
-// Hour  : ds1307_addr[2]
-// Day   : ds1307_addr[3]
-// Date  : ds1307_addr[4]
-// Month : ds1307_addr[5]
-// Year  : ds1307_addr[6]
 
 #define sbi(port, pin)   ((port) |= (uint8_t)(1 << pin))
 #define cbi(port, pin)   ((port) &= (uint8_t)~(1 << pin))
@@ -116,10 +109,10 @@ int main( void )
         TWCR = (1<<TWEN);
 
 //ds1307_addr[0]=0;
-//ds1307_addr[1]=53;
-//ds1307_addr[2]=22;
+//ds1307_addr[1]=41;
+//ds1307_addr[2]=8;
 //ds1307_addr[3]=1;
-//ds1307_addr[4]=24;
+//ds1307_addr[4]=22;
 //ds1307_addr[5]=4;
 //ds1307_addr[6]=12;
 //Write_DS1307();
