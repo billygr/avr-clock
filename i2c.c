@@ -103,7 +103,7 @@ i2c_quit:
 char i2c_read(char *data,char ack_type)
 {
   unsigned char twi_status;
-  char r_val = -1;               
+  char r_val = -1;
 
   if (ack_type) {
     // Read I2C Data and Send Acknowledge

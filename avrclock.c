@@ -109,19 +109,10 @@ int main( void )
         //enable TWI
         TWCR = (1<<TWEN);
 
-//ds1307_addr[0]=0;
-//ds1307_addr[1]=41;
-//ds1307_addr[2]=8;
-//ds1307_addr[3]=1;
-//ds1307_addr[4]=22;
-//ds1307_addr[5]=4;
-//ds1307_addr[6]=12;
-//Write_DS1307();
-
-	/* Make all pins of port B/D as output	*/
-	DDRB =0xFF;
-	DDRD =0xFF;
-	DDRC =0xFF;
+        /* Make all pins of port B/D as output	*/
+        DDRB =0xFF;
+        DDRD =0xFF;
+        DDRC =0xFF;
 
         /* All displays are off */
         PORTC = 0xFF;
@@ -133,7 +124,11 @@ int main( void )
 
         sei(); //Enable interrupts
 
+        // Self test display 8888 in the displays
         sbi(PORTB, LED);
+        display_hex(0x88,0x88);
+        _delay_ms(500);
+
         while (1){
 
                 Read_DS1307();
