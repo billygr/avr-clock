@@ -15,15 +15,16 @@ extern char ds1307_addr[7];
 
 
 /* Connections to the PCB       */
+#define DISPLAY_PORT PORTD
 #define LED PORTB0
-#define D PD0
-#define E PD1
-#define C PD2
-#define DP PD3
-#define B PD4
-#define A PD5
-#define G PD6
-#define F PD7
+#define D PORTD0
+#define E PORTD1
+#define C PORTD2
+#define DP PORTD3
+#define B PORTD4
+#define A PORTD5
+#define G PORTD6
+#define F PORTD7
 
 #define DIG1 PORTC0
 #define DIG2 PORTC1
@@ -61,7 +62,7 @@ void update_displays()
         _delay_ms(3);
         display_number(display4,3);
         _delay_ms(3);
-        PORTD=0;
+        DISPLAY_PORT=0;
 }
 
 ISR (SIG_OVERFLOW2)
@@ -71,15 +72,42 @@ ISR (SIG_OVERFLOW2)
 
 void display_number(unsigned char number, unsigned char digit)
 {
-
+/* For each display we clear his bit = Zero in order to be on
+For all the others we set his bit = 1 in order to be off
+*/
         switch (digit) {
-        case 0: PORTC=254;break;
-        case 1: PORTC=253;break;
-        case 2: PORTC=251;break;
-        case 3: PORTC=247;break;
+        case 0: 
+                {
+                cbi(PORTC,DIG1);
+                sbi(PORTC,DIG2);
+                sbi(PORTC,DIG3);
+                sbi(PORTC,DIG4);break;
+                }
+        case 1: 
+                {
+                cbi(PORTC,DIG2);
+                sbi(PORTC,DIG1);
+                sbi(PORTC,DIG3);
+                sbi(PORTC,DIG4);break;
+                }
+        case 2: 
+                {
+                cbi(PORTC,DIG3);
+                sbi(PORTC,DIG1);
+                sbi(PORTC,DIG2);
+                sbi(PORTC,DIG4);break;
+                }
+
+        case 3:
+                {
+                cbi(PORTC,DIG4);
+                sbi(PORTC,DIG1);
+                sbi(PORTC,DIG2);
+                sbi(PORTC,DIG3);break;
+                }
         }
 
-        PORTD = seven_segment_lookup[number];
+        DISPLAY_PORT = seven_segment_lookup[number];
 }
 
 void display_time(unsigned char hours, unsigned char minutes)
