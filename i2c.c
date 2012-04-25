@@ -16,7 +16,16 @@ http://www.ermicro.com/blog/?p=950 */
 #define I2C_DATA_ACK 2
 #define I2C_STOP 3
 
-/* START I2C Routine */
+
+void i2c_init(void)
+{
+        //set SCL to 400kHz
+        TWSR = 0x00;
+        TWBR = 0x0C;
+        //enable TWI
+        TWCR = (1<<TWEN);
+}
+
 unsigned char i2c_transmit(unsigned char type) {
   switch(type) {
      case I2C_START:    // Send Start Condition
