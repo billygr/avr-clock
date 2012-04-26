@@ -13,7 +13,7 @@ CC             = avr-gcc
 # Override is only needed by avr-lib build system.
 
 #override CFLAGS        = -g -Wall $(OPTIMIZE) -mmcu=$(MCU_TARGET) $(DEFS)
-override CFLAGS        = -g -Wall  -Wmissing-prototypes $(OPTIMIZE) -mmcu=$(MCU_TARGET) $(DEFS)
+override CFLAGS        = -g -Wall -Wmissing-prototypes $(OPTIMIZE) -mmcu=$(MCU_TARGET) $(DEFS)
 
 override LDFLAGS       = -Wl,-Map,$(PRG).map
 
@@ -26,7 +26,7 @@ $(PRG).elf: $(OBJ)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 # dependency:
-# PRG.o: PRG.c FILE1.C
+demo.o: demo.c iocompat.h
 
 clean:
 	rm -rf *.o $(PRG).elf *.eps *.png *.pdf *.bak 
@@ -94,4 +94,4 @@ pdf: $(PRG).pdf
 
 %.png: %.fig
 	$(FIG2DEV) -L png $< $@
-
+# Makefile original source http://www.nongnu.org/avr-libc/user-manual/group__demo__project.html
