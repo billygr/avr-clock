@@ -45,24 +45,22 @@ ISR (SIG_OVERFLOW2)
                 ticks=0;
                 if (timer_running)
                 {
-                        if (timer_seconds>=0)
+                        if (timer_seconds>=1)
                         {
                                 timer_seconds--;
                                 LED_PORT ^= _BV(LED);
                         }
-                        
+
                         if (timer_seconds==0 && timer_minutes>0)
                         {
                                 timer_minutes--;
-                                timer_seconds=60;
+                                timer_seconds=59;
                         }
 
                         if (timer_minutes==0 && timer_seconds==0)
                         {
                                 timer_running=0;
                         }
-                        
-
                 }
         }
 }
@@ -135,47 +133,22 @@ void display_decimal_value(unsigned int number)
         display4=number % 10;
 }
 
-unsigned char button1_is_pressed()
+unsigned char button_is_pressed(unsigned char BUTTON_PINX, unsigned char BUTTON_BITX)
 {
-        /* the button is pressed when BUTTON_BIT is clear */
-        if (bit_is_clear(BUTTON1_PIN, BUTTON1_BIT))
+        /* the button is pressed when the specific BUTTON_BITX is clear */
+        if (bit_is_clear(BUTTON_PINX, BUTTON_BITX))
         {
-        /*      Debounce wait 25 ms     */
+        /*      Debouncing using a delay of 25 ms     */
                 _delay_ms(25);
-                if (bit_is_clear(BUTTON1_PIN, BUTTON1_BIT)) return 1;
+                if (bit_is_clear(BUTTON_PINX, BUTTON_BITX)) return 1;
         }
 
         return 0;
 }
 
-unsigned char button2_is_pressed()
-{
-        /* the button is pressed when BUTTON_BIT is clear */
-        if (bit_is_clear(BUTTON2_PIN, BUTTON2_BIT))
-        {
-        /*      Debounce wait 25 ms     */
-                _delay_ms(25);
-                if (bit_is_clear(BUTTON2_PIN, BUTTON2_BIT)) return 1;
-        }
-
-        return 0;
-}
-
-unsigned char button3_is_pressed()
-{
-        /* the button is pressed when BUTTON_BIT is clear */
-        if (bit_is_clear(BUTTON3_PIN, BUTTON3_BIT))
-        {
-        /*      Debounce wait 25 ms     */
-                _delay_ms(25);
-                if (bit_is_clear(BUTTON3_PIN, BUTTON3_BIT)) return 1;
-        }
-
-        return 0;
-}
 int main( void )
 {
-        /* Make all pins of port B/D as output	*/
+        /* Make all pins of port B/D/C as output        */
         DDRB =0xFF;
         DDRD =0xFF;
         DDRC =0xFF;
@@ -204,17 +177,19 @@ int main( void )
         /* turn on internal pull-up resistor for the switches */
         BUTTON1_PORT |= _BV(BUTTON1_BIT);
         BUTTON2_PORT |= _BV(BUTTON2_BIT);
-        BUTTON3_PORT |= _BV(BUTTON3_BIT);
+        MODEBUTTON_PORT |= _BV(MODEBUTTON_BIT);
 
         while (1)
         {
 
                 /* Cycle through modes  */
-                if (button3_is_pressed())
+                if (button_is_pressed(MODEBUTTON_PIN, MODEBUTTON_BIT))
                 {
-                        operation_mode++;if (operation_mode>5) operation_mode=1;
+                        /* Got it, however wait until it is released   */
+                        while(button_is_pressed(MODEBUTTON_PIN,MODEBUTTON_BIT)) {};
+                        operation_mode++;if (operation_mode>4) operation_mode=1;
                 }
-                
+
                 /* Display time */
                 if (operation_mode==1)
                 {
@@ -235,16 +210,16 @@ int main( void )
                 if (operation_mode==3)
                 {
                         cbi(PORTB,LED);
-                        if (button1_is_pressed())
+                        if (button_is_pressed(BUTTON1_PIN, BUTTON1_BIT))
                         {
                                 timer_minutes++;
                                 if (timer_minutes>59) timer_minutes=0;
                         }
-        
-                        if (button2_is_pressed())
+
+                        if (button_is_pressed(BUTTON2_PIN, BUTTON2_BIT))
                         {
                                 timer_seconds++;
-                                if (timer_seconds>59) timer_seconds=0;
+                                if (timer_seconds>59) {timer_seconds=0;timer_minutes++;}
                         }
                         display_time(timer_minutes,timer_seconds);
                 }
@@ -253,9 +228,14 @@ int main( void )
                 if (operation_mode==4)
                 {
                         if (timer_running==0) sbi(PORTB,LED);
-                        if (button1_is_pressed()) {timer_running=1;cbi(PORTB,LED);};
-                        if (button2_is_pressed()) timer_running=0;
-                        if (button3_is_pressed()) {timer_running=0;operation_mode=1;}
+                        if (button_is_pressed(BUTTON1_PIN, BUTTON1_BIT)) {timer_running=1;cbi(PORTB,LED);};
+                        if (button_is_pressed(BUTTON2_PIN, BUTTON2_BIT)) timer_running=0;
+                        if (button_is_pressed(MODEBUTTON_PIN, MODEBUTTON_BIT))
+                        {
+                                while(button_is_pressed(MODEBUTTON_PIN,MODEBUTTON_BIT)){};
+                                timer_running=0;
+                                operation_mode=1;
+                        }
                         display_time(timer_minutes,timer_seconds);
                 }
         }

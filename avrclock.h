@@ -2,9 +2,6 @@
 #define AVRCLOCKH
 
 /* Unused pins
-PB1 15
-PB2 16
-PB3 17 MOSI
 PB4 18 MISO
 PB5 19 SCK
 */
@@ -26,9 +23,9 @@ PB5 19 SCK
 #define BUTTON2_PIN PINB
 #define BUTTON2_BIT PORTB2
 
-#define BUTTON3_PORT PORTB
-#define BUTTON3_PIN PINB
-#define BUTTON3_BIT PORTB3
+#define MODEBUTTON_PORT PORTB
+#define MODEBUTTON_PIN PINB
+#define MODEBUTTON_BIT PORTB3
 
 #define D PORTD0
 #define E PORTD1
@@ -69,6 +66,7 @@ char seven_segment_lookup[16] = {
 };
 
 void update_displays(void);
+unsigned char button_is_pressed(unsigned char BUTTON_PINX, unsigned char BUTTON_BITX);
 void display_number(unsigned char number, unsigned char digit);
 void display_time(unsigned char hours, unsigned char minutes);
 void display_hex(unsigned char number1, unsigned char number2);
