@@ -29,7 +29,7 @@ void update_displays(void)
         DISPLAY_PORT=0;
 }
 
-ISR (SIG_OVERFLOW2)
+ISR (TIMER2_OVF_vect)
 {
 /*
         Timer2 overflows every 16.384mS
